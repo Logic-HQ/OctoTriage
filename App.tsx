@@ -46,6 +46,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-zinc-950 text-zinc-100 font-sans overflow-hidden">
+      
       {/* Navigation & Target Repos Sidebar */}
       <aside className="w-64 border-r border-zinc-800 bg-zinc-900/40 p-4 flex flex-col justify-between">
         <div>
