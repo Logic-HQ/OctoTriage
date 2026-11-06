@@ -1,0 +1,106 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: GitHub OAuth setup
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /auth/github/config:
+    get:
+      operationId: getGitHubOAuthConfig
+      tags: [auth]
+      summary: Get public GitHub OAuth configuration
+      responses:
+        "200":
+          description: Public OAuth client configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GitHubOAuthConfig"
+        "503":
+          description: GitHub OAuth is not configured
+  /auth/github/exchange:
+    post:
+      operationId: exchangeGitHubOAuthCode
+      tags: [auth]
+      summary: Exchange a GitHub OAuth code for an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GitHubOAuthCodeInput"
+      responses:
+        "200":
+          description: GitHub OAuth access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GitHubOAuthTokens"
+        "400":
+          description: Invalid code or redirect URI
+        "503":
+          description: GitHub OAuth is not configured
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    GitHubOAuthConfig:
+      type: object
+      properties:
+        clientId:
+          type: string
+      required:
+        - clientId
+    GitHubOAuthCodeInput:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 1
+        redirectUri:
+          type: string
+          format: uri
+      required:
+        - code
+        - redirectUri
+    GitHubOAuthTokens:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+        scope:
+          type: string
+      required:
+        - accessToken
+        - tokenType
+        - scope
+
