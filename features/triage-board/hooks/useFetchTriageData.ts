@@ -18,9 +18,6 @@ export interface RepositoryItem {
   reviewRequestsCount: number;
 }
 
-/**
- * Builds and executes a single bulk GraphQL query for all tracked repos.
- */
 export async function fetchBulkRepositoryData(
   trackedRepos: Array<{ owner: string; name: string }>
 ): Promise<RepositoryItem[]> {
